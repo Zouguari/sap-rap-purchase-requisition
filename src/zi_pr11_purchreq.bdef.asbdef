@@ -1,0 +1,104 @@
+managed with additional save implementation in class zbp_i_pr11_purchreq unique;
+strict;
+with draft;
+
+define behavior for ZI_PR11_PurchReq alias PurchaseRequest
+persistent table zpr11_hdr
+draft table zpr11_hdr_d
+lock master
+total etag LastChangedAt
+authorization master ( global, instance )
+etag master LocalLastChangedAt
+{
+  create;
+  update ( features : instance );
+  delete ( features : instance );
+  association _Item { create ( features : instance ); with draft; }
+
+  field ( numbering : managed, readonly ) PrUuid;
+  field ( readonly ) PrId, Requester, Status, TotalAmount,
+                     ApprovedBy, ApprovedAt, RejectReason, SapPrNumber,
+                     CreatedBy, CreatedAt, LastChangedBy, LastChangedAt,
+                     LocalLastChangedAt;
+  field ( mandatory ) Description, Plant, PurchasingGroup, Currency;
+
+  action ( features : instance ) submit result [1] $self;
+  action ( features : instance ) approve result [1] $self;
+  action ( features : instance ) reject parameter ZA_PR11_RejectParam result [1] $self;
+
+  determination setInitialValues on modify { create; }
+  determination propagateCurrency on modify { field Currency; }
+  determination assignPrId on save { create; }
+
+  validation validateHeader on save { create; field Description, Plant, PurchasingGroup, Currency; }
+
+  draft action ( features : instance ) Edit;
+  draft action Activate;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare
+  {
+    validation validateHeader;
+    validation PurchaseRequestItem~validateItem;
+  }
+
+  mapping for zpr11_hdr
+  {
+    PrUuid             = pr_uuid;
+    PrId               = pr_id;
+    Description        = description;
+    Requester          = requester;
+    Plant              = plant;
+    PurchasingGroup    = purchasing_group;
+    Status             = status;
+    TotalAmount        = total_amount;
+    Currency           = currency;
+    ApprovedBy         = approved_by;
+    ApprovedAt         = approved_at;
+    RejectReason       = reject_reason;
+    SapPrNumber        = sap_pr_number;
+    CreatedBy          = created_by;
+    CreatedAt          = created_at;
+    LastChangedBy      = last_changed_by;
+    LastChangedAt      = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}
+
+define behavior for ZI_PR11_PurchReqItem alias PurchaseRequestItem
+persistent table zpr11_itm
+draft table zpr11_itm_d
+lock dependent by _PurchReq
+authorization dependent by _PurchReq
+etag master LocalLastChangedAt
+early numbering
+{
+  update ( features : instance );
+  delete ( features : instance );
+  association _PurchReq { with draft; }
+
+  field ( readonly ) PrUuid, ItemUuid, ItemNo, Unit, ItemAmount, Currency,
+                     LocalLastChangedAt;
+  field ( mandatory ) Material, Quantity, UnitPrice, DeliveryDate;
+
+  determination setItemDefaults on modify { create; field Material; }
+  determination calculateAmounts on modify { create; delete; field Quantity, UnitPrice; }
+
+  validation validateItem on save { create; field Material, Quantity, UnitPrice, DeliveryDate; }
+
+  mapping for zpr11_itm
+  {
+    PrUuid             = pr_uuid;
+    ItemUuid           = item_uuid;
+    ItemNo             = item_no;
+    Material           = material;
+    Description        = description;
+    Quantity           = quantity;
+    Unit               = unit;
+    UnitPrice          = unit_price;
+    ItemAmount         = item_amount;
+    Currency           = currency;
+    DeliveryDate       = delivery_date;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}

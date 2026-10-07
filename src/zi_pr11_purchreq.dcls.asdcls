@@ -1,0 +1,7 @@
+@EndUserText.label: 'PR v2 - Access Purchase Request'
+@MappingRole: true
+define role ZI_PR11_PURCHREQ {
+  grant select on ZI_PR11_PurchReq
+    where Requester                 = aspect user
+       or _CurrentApprover.Approver = aspect user;
+}

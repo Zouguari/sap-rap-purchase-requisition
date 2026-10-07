@@ -1,0 +1,32 @@
+projection;
+strict;
+use draft;
+
+define behavior for ZC_PR11_PurchReq alias PurchaseRequest
+use etag
+{
+  use create;
+  use update;
+  use delete;
+
+  use action submit;
+  use action approve;
+  use action reject;
+
+  use action Edit;
+  use action Activate;
+  use action Discard;
+  use action Resume;
+  use action Prepare;
+
+  use association _Item { create; with draft; }
+}
+
+define behavior for ZC_PR11_PurchReqItem alias PurchaseRequestItem
+use etag
+{
+  use update;
+  use delete;
+
+  use association _PurchReq { with draft; }
+}

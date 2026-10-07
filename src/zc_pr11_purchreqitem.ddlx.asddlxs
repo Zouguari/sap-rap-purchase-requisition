@@ -1,0 +1,51 @@
+@Metadata.layer: #CORE
+@UI: {
+  headerInfo: {
+    typeName: 'Item',
+    typeNamePlural: 'Items',
+    title:       { type: #STANDARD, value: 'ItemNo' },
+    description: { type: #STANDARD, value: 'Description' }
+  }
+}
+annotate view ZC_PR11_PurchReqItem with
+{
+  @UI.facet: [
+    { id: 'ItemDetails', purpose: #STANDARD, type: #IDENTIFICATION_REFERENCE,
+      label: 'Item Details', position: 10 }
+  ]
+
+  @UI.hidden: true
+  PrUuid;
+
+  @UI.hidden: true
+  ItemUuid;
+
+  @EndUserText.label: 'Item'
+  @UI: { lineItem: [{ position: 10 }], identification: [{ position: 10 }] }
+  ItemNo;
+
+  @UI: { lineItem: [{ position: 20 }], identification: [{ position: 20 }] }
+  Material;
+
+  @EndUserText.label: 'Description'
+  @UI: { lineItem: [{ position: 30 }], identification: [{ position: 30 }] }
+  Description;
+
+  @UI: { lineItem: [{ position: 40 }], identification: [{ position: 40 }] }
+  Quantity;
+
+  @EndUserText.label: 'Unit Price'
+  @UI: { lineItem: [{ position: 50 }], identification: [{ position: 50 }] }
+  UnitPrice;
+
+  @EndUserText.label: 'Item Amount'
+  @UI: { lineItem: [{ position: 60 }], identification: [{ position: 60 }] }
+  ItemAmount;
+
+  @EndUserText.label: 'Delivery Date'
+  @UI: { lineItem: [{ position: 70 }], identification: [{ position: 70 }] }
+  DeliveryDate;
+
+  @UI.hidden: true
+  LocalLastChangedAt;
+}

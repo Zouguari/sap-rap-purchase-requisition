@@ -1,0 +1,114 @@
+@Metadata.layer: #CORE
+@UI: {
+  headerInfo: {
+    typeName: 'Purchase Request',
+    typeNamePlural: 'Purchase Requests',
+    title:       { type: #STANDARD, value: 'Description' },
+    description: { type: #STANDARD, value: 'PrId' }
+  },
+  presentationVariant: [{ sortOrder: [{ by: 'PrId', direction: #DESC }] }]
+}
+annotate view ZC_PR11_PurchReq with
+{
+  @UI.facet: [
+    { id: 'HeaderStatus', purpose: #HEADER, type: #DATAPOINT_REFERENCE,
+      targetQualifier: 'StatusData', position: 10 },
+    { id: 'HeaderTotal',  purpose: #HEADER, type: #DATAPOINT_REFERENCE,
+      targetQualifier: 'TotalData', position: 20 },
+    { id: 'GeneralInfo',  purpose: #STANDARD, type: #IDENTIFICATION_REFERENCE,
+      label: 'General Information', position: 10 },
+    { id: 'Approval',     purpose: #STANDARD, type: #FIELDGROUP_REFERENCE,
+      targetQualifier: 'Approval', label: 'Approval', position: 20 },
+    { id: 'Items',        purpose: #STANDARD, type: #LINEITEM_REFERENCE,
+      targetElement: '_Item', label: 'Items', position: 30 }
+  ]
+
+  @UI.hidden: true
+  PrUuid;
+
+  @EndUserText.label: 'Request ID'
+  @UI: { lineItem:       [{ position: 10 }],
+         identification: [{ position: 10 }],
+         selectionField: [{ position: 10 }] }
+  PrId;
+
+  @EndUserText.label: 'Description'
+  @UI: { lineItem: [{ position: 20 }] }
+  Description;
+
+  @EndUserText.label: 'Requester'
+  @UI: { lineItem:       [{ position: 30 }],
+         identification: [{ position: 30 }],
+         selectionField: [{ position: 20 }] }
+  Requester;
+
+  @UI: { lineItem:       [{ position: 40 }],
+         identification: [{ position: 40 }],
+         selectionField: [{ position: 30 }] }
+  Plant;
+
+  @UI: { identification: [{ position: 50 }] }
+  PurchasingGroup;
+
+  @EndUserText.label: 'Status'
+  @UI: { lineItem:       [{ position: 50, criticality: 'StatusCriticality' },
+                          { type: #FOR_ACTION, dataAction: 'submit',  label: 'Submit'  },
+                          { type: #FOR_ACTION, dataAction: 'approve', label: 'Approve' },
+                          { type: #FOR_ACTION, dataAction: 'reject',  label: 'Reject'  }],
+         identification: [{ position: 60, criticality: 'StatusCriticality' },
+                          { type: #FOR_ACTION, dataAction: 'submit',  label: 'Submit'  },
+                          { type: #FOR_ACTION, dataAction: 'approve', label: 'Approve' },
+                          { type: #FOR_ACTION, dataAction: 'reject',  label: 'Reject'  }],
+         selectionField: [{ position: 40 }],
+         dataPoint:      { qualifier: 'StatusData', title: 'Status',
+                           criticality: 'StatusCriticality' },
+         textArrangement: #TEXT_ONLY }
+  Status;
+
+  @UI.hidden: true
+  StatusText;
+
+  @UI.hidden: true
+  StatusCriticality;
+
+  @EndUserText.label: 'Total Amount'
+  @UI: { lineItem:       [{ position: 60 }],
+         identification: [{ position: 70 }],
+         dataPoint:      { qualifier: 'TotalData', title: 'Total Amount' } }
+  TotalAmount;
+
+  @UI: { identification: [{ position: 80 }] }
+  Currency;
+
+  @EndUserText.label: 'Approved By'
+  @UI.fieldGroup: [{ qualifier: 'Approval', position: 10 }]
+  ApprovedBy;
+
+  @EndUserText.label: 'Approved At'
+  @UI.fieldGroup: [{ qualifier: 'Approval', position: 20 }]
+  ApprovedAt;
+
+  @EndUserText.label: 'Rejection Reason'
+  @UI.fieldGroup: [{ qualifier: 'Approval', position: 30 }]
+  RejectReason;
+
+  @EndUserText.label: 'SAP Purchase Requisition'
+  @UI: { lineItem:   [{ position: 70 }],
+         fieldGroup: [{ qualifier: 'Approval', position: 40 }] }
+  SapPrNumber;
+
+  @UI.hidden: true
+  CreatedBy;
+
+  @UI.hidden: true
+  CreatedAt;
+
+  @UI.hidden: true
+  LastChangedBy;
+
+  @UI.hidden: true
+  LastChangedAt;
+
+  @UI.hidden: true
+  LocalLastChangedAt;
+}

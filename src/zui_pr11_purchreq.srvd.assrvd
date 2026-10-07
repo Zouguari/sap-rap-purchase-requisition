@@ -1,0 +1,5 @@
+@EndUserText.label: 'PR v2 - Purchase Request Service'
+define service ZUI_PR11_PURCHREQ {
+  expose ZC_PR11_PurchReq as PurchaseRequest;
+  expose ZC_PR11_PurchReqItem as PurchaseRequestItem;
+}

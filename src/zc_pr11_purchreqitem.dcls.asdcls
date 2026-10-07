@@ -1,0 +1,6 @@
+@EndUserText.label: 'PR v2 - Access Purchase Request Item (Projection)'
+@MappingRole: true
+define role ZC_PR11_PURCHREQITEM {
+  grant select on ZC_PR11_PurchReqItem
+    where inheriting conditions from entity ZI_PR11_PurchReqItem;
+}
